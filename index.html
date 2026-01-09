@@ -610,6 +610,14 @@ const game = {
             showModal('⛔ 推理错误', '你的侦探笔记虽然画全了，但推导出的结论是错误的。\n请重新检查线索，真正的凶手不是这一位...', false);
         }
     },
+
+        reset() { 
+        if(confirm('要擦掉本案的所有笔记重新开始吗？')) { 
+            this.allStates[this.currentLevelIdx] = {}; 
+            this.updateView(); 
+            this.saveData(); 
+        } 
+    },
     
 // 弹窗关闭时的回调
     onModalClose() {
@@ -637,4 +645,5 @@ function showModal(title, msg, isSuccess, btnText = '关闭') {
 window.onload = () => game.init();
 </script>
 </body>
+
 </html>
