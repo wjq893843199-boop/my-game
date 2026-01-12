@@ -3,52 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Patrick Hand 用于手写笔记 -->
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
-    <title>妙探寻凶 - 探案集 (最终版)</title>
+    <title>妙探寻凶 - 探案集</title>
     <style>
         :root {
-            /* --- 1. 背景层级 (基调：冷冷静静的案头) --- */
-            /* L1: 桌面底色 - 保持冷灰，理性克制 */
+            /* --- 1. 配色系统 (Refined Slate) --- */
             --bg-app: #F0F2F5; 
-            
-            /* L2: 案卷纸张 - 微暖白，模拟高档纸张质感 */
             --bg-panel: #FFFCF9; 
-            
-            /* L3: 交互/表头 - 中性灰 */
             --bg-subtle: #E9ECEF;
-            --bg-active: #E7F1FF; /* 极淡蓝，仅用于选中态 */
+            --bg-active: #E7F1FF;
 
-            /* --- 2. 墨水系统 (The Ink) --- */
-            /* 叙事/主要文字 - 深炭灰，带极其微弱的暖调，像印刷字 */
             --text-primary: #2D3436;
-            
-            /* 功能/辅助文字 - 纯冷灰 */
             --text-secondary: #8E9AAF; 
             --text-disabled: #BDC3C7;
             
-            /* [逻辑标记色] - 拟物化墨水 */
-            /* × 排除：干涸红墨水 */
             --ink-cross: #A63737; 
-            
-            /* ✓ 确认：森林绿 (沉稳确凿) */
             --ink-check: #217346; 
-            
-            /* ? 猜测：HB铅笔灰 */
             --ink-pencil: #636E72;
 
-            /* --- 3. 唯一的焦点色 (Functional Focus) --- */
-            /* 克莱因蓝 - 纯粹的功能指引 */
             --accent-focus: #2962FF;
-
-            /* --- 4. 结构与质感 --- */
             --border-main: #D1D5DB;
-            --highlight-row: rgba(41, 98, 255, 0.05); /* 极淡的焦点色投影 */
-            
-            /* 阴影：纸张浮起感 */
+            --highlight-row: rgba(41, 98, 255, 0.05);
             --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.12);
             
-            --cell-size: 46px;
+            --cell-size: 54px;
+
+            /* --- 2. 字体系统 --- */
+            --font-sans: "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            --font-serif: "Noto Serif CJK SC", "Songti SC", "SimSun", serif;
+            --font-mono: "Roboto Mono", "Courier New", monospace;
+
+            /* 身份层 */
+            --id-font-family: var(--font-sans);
+            --id-font-size: 16px;
+            --id-font-weight: 700;
+            --id-line-height: 1.4;
+            --id-letter-spacing: 0.05em; 
+
+            /* 逻辑层 */
+            --logic-font-family: var(--font-sans);
+            --logic-font-size: 15px;
+            --logic-font-weight: 400;
+            --logic-line-height: 1.7;
+
+            /* 叙事层 */
+            --narrative-font-family: var(--font-serif);
+            --narrative-font-size: 13px;
+            --narrative-font-weight: 400;
+            --narrative-line-height: 1.6;
+
+            /* 属性层 */
+            --attr-font-size: 12px;
+            --attr-font-weight: 700;
         }
 
         * { box-sizing: border-box; user-select: none; }
@@ -56,11 +62,38 @@
         body { 
             height: 100vh; margin: 0; overflow: hidden; 
             background-color: var(--bg-app);
-            font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif; 
+            font-family: var(--font-sans); 
             color: var(--text-primary); 
         }
 
         .app-shell { display: flex; flex-direction: column; height: 100vh; width: 100%; }
+
+        /* --- GM DEBUG SYSTEM STYLES --- */
+        #gm-panel {
+            display: none; position: fixed; top: 100px; left: 100px; width: 320px;
+            background: rgba(0, 0, 0, 0.9); color: #0f0; font-family: 'Courier New', monospace;
+            padding: 15px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 99999; border: 1px solid #0f0;
+        }
+        #gm-panel h3 { 
+            cursor: move; user-select: none;
+            margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #0f0; padding-bottom: 5px; display: flex; justify-content: space-between;
+        }
+        #gm-panel .gm-section { margin-bottom: 12px; }
+        #gm-panel label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
+        #gm-panel .gm-val { color: #fff; font-weight: bold; font-size: 14px; word-break: break-all; }
+        #gm-panel button {
+            background: #003300; color: #0f0; border: 1px solid #0f0;
+            padding: 4px 8px; margin: 4px 4px 0 0; cursor: pointer; font-size: 12px; font-family: inherit;
+        }
+        #gm-panel button:hover { background: #0f0; color: #000; }
+        #gm-close { cursor: pointer; color: #f00; font-weight: bold; }
+        
+        /* UI X-Ray Class */
+        .debug-xray * {
+            outline: 1px solid rgba(255, 0, 0, 0.3) !important;
+            background-color: rgba(255, 0, 0, 0.02) !important;
+        }
 
         /* --- 1. Header --- */
         header {
@@ -81,7 +114,7 @@
         
         .title-group { display: flex; align-items: center; gap: 8px; }
         .game-title { 
-            font-family: 'Courier New', Courier, monospace; /* 叙事层使用打字机字体 */
+            font-family: var(--font-mono); 
             font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px; 
         }
         .case-info { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; font-weight: 500; letter-spacing: 0.5px; }
@@ -96,7 +129,6 @@
         .nav-btn:hover:not(:disabled) { background: var(--bg-subtle); border-color: var(--text-secondary); }
         .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; border-color: var(--border-main); }
 
-        /* 玩法说明图标 */
         .how-to-play-icon {
             display: inline-flex; justify-content: center; align-items: center;
             width: 20px; height: 20px; 
@@ -113,7 +145,7 @@
             background: var(--text-primary); color: #fff; 
             padding: 16px; border-radius: 6px; 
             position: absolute; 
-            top: 36px; left: 50%; transform: translateX(-50%); /* 正下方居中 */
+            top: 36px; left: 50%; transform: translateX(-50%); 
             z-index: 9999; 
             font-size: 0.85rem; line-height: 1.6; text-align: left; font-weight: normal; font-family: sans-serif;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
@@ -140,7 +172,6 @@
             display: flex; justify-content: center; align-items: center; font-size: 1.2rem; 
             transition: all 0.1s; position: relative; color: var(--text-secondary);
         }
-        /* 唯一的焦点色应用 */
         .tool-btn:hover:not(:disabled) { background: var(--bg-subtle); color: var(--text-primary); }
         .tool-btn.active { 
             background: var(--bg-active); 
@@ -165,42 +196,240 @@
             overflow-y: auto; background: transparent;
             display: flex; flex-direction: column; padding-top: 16px;
         }
-        #dossier-panel { width: 340px; min-width: 260px; border-right: 1px solid var(--border-main); background: var(--bg-panel); }
-        #clue-panel { width: 340px; min-width: 260px; border-left: 1px solid var(--border-main); background: var(--bg-panel); }
+        #dossier-panel { width: 300px; min-width: 240px; border-right: 1px solid var(--border-main); background: var(--bg-panel); }
+        #clue-panel { width: 300px; min-width: 240px; border-left: 1px solid var(--border-main); background: var(--bg-panel); }
 
         .section-label { 
-            font-family: 'Courier New', Courier, monospace; /* 叙事层 */
-            font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); 
-            border-bottom: 2px solid var(--bg-subtle);
-            margin: 0 16px 12px; padding-bottom: 6px;
-            letter-spacing: 1px; text-transform: uppercase;
+            font-family: var(--font-mono);
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            color: var(--text-secondary); 
+            border-bottom: 1px solid var(--border-main); /* 变细一点 */
+            margin: 20px 16px 12px; /* 顶部增加间距 */
+            padding-bottom: 6px;
+            letter-spacing: 1px; 
+            text-transform: uppercase;
+        }
+        /* 第一个标题不需要顶部间距 */
+        .section-label:first-child { margin-top: 0; }
+
+        /* --- 新增：让嫌疑人/凶器/地点列表支持 Grid 双列 --- */
+        #q2-suspects, #q3-locations, #q3-weapons {
+            display: grid;
+            /* 调整 minmax 宽度，确保在窄屏下是单列，宽屏下是双列 */
+            /* 240px 左右是一个比较舒服的卡片宽度 */
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+            gap: 10px;
+            padding: 0 16px 16px;
+        }
+        /* Center Column Split */
+        #center-column {
+            flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative;
         }
 
-        .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; padding: 0 16px 20px;
+        /* --- Draggable Cards (视觉层级统一版) --- */
+        /* --- Draggable Cards (Refined Dossier Style) --- */
+    .info-card {
+           background: #fff;
+           border: 1px solid var(--border-main);
+            border-radius: 8px; /* 更圆润的角 */
+            padding: 10px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+           cursor: grab;
+           position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+           transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        /* 悬停与激活状态 */
+    .info-card:hover {
+            border-color: var(--accent-focus);
+            box-shadow: 0 4px 12px rgba(41, 98, 255, 0.12);
+            transform: translateY(-2px);
+        }
+    .info-card:active { cursor: grabbing; transform: scale(0.98); }
+
+    /* 排除状态 */
+    .info-card.eliminated {
+            opacity: 0.6;
+            background: var(--bg-subtle);
+            border-color: transparent;
+            box-shadow: none;
+           filter: grayscale(1); /* 完全去色 */
+        }
+    .info-card.eliminated::after {
+    /* 增加一个删除线效果 */
+    content: "";
+    position: absolute;
+    top: 50%; left: 10px; right: 10px;
+    height: 1px;
+    background: var(--text-disabled);
+    pointer-events: none;
+}
+
+/* 左侧图标容器 (Visual Anchor) */
+.card-avatar {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: var(--bg-subtle);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* 右侧内容区 */
+.card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0; /* 修复 Flex 子元素文本溢出问题 */
+}
+
+/* 标题层 */
+.card-title {
+    font-family: var(--id-font-family);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 长标题自动省略 */
+}
+
+/* 叙事层 (描述) - 已修复兼容性警告 */
+.card-desc {
+    font-family: var(--font-sans); /* 统一使用无衬线字体 */
+    font-size: 0.85rem;
+    color: #636E72;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    
+    /* 多行省略的核心代码 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 兼容 Chrome/Safari/Edge */
+    line-clamp: 2;         /* 标准属性 (添加这一行即可消除警告) */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- 替换原有的 .card-meta 相关样式 --- */
+/* --- 卡片底部标签层 (完全统一版) --- */
+
+.card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;       /* 稍微增加一点间距，更透气 */
+    margin-top: auto;
+    padding-top: 6px; /* 与上方描述拉开一点距离 */
+}
+
+/* 核心：无论是什么类型的标签，样式完全一致 */
+.meta-tag {
+    /* 字体统一 */
+    font-family: var(--font-sans);
+    font-size: 0.75rem;     /* 12px */
+    font-weight: 500;       /* 统一字重：不加粗，也不过细，保持清晰的中等字重 */
+    
+    /* 颜色统一 (使用中性灰，不偏向任何一方) */
+    color: #4B5563;         /* 统一的深灰色文字 */
+    background: #F3F4F6;    /* 统一的浅灰背景 */
+    border: 1px solid #E5E7EB; /* 统一的微弱边框 */
+    
+    /* 盒模型统一 */
+    padding: 2px 8px;
+    border-radius: 4px;
+    line-height: 1.4;
+    
+    /* 确保没有任何浏览器默认样式的干扰 */
+    box-sizing: border-box;
+}
+
+/* 特征标签 (修改：改为深岩灰，不再使用红色) */
+.tag-trait {
+    background: #E2E8F0; /* 比背景稍深的冷灰色 */
+    color: #475569;      /* 深岩灰，清晰且专业，不刺眼 */
+}
+
+/* 类型标签 (保持原有的浅灰色系) */
+.tag-type {
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+}
+
+        /* 图标：统一大小和位置 */
+        .info-icon { 
+            font-size: 2rem; 
+            min-width: 42px; 
+            text-align: center; 
+            line-height: 1.2; 
+            margin-top: 0;
         }
         
-        .info-card { 
-            background: #fff; /* 纯白卡片在微暖背景上 */
-            border: 1px solid var(--border-main); border-radius: 6px; padding: 12px; 
-            display: flex; gap: 12px; cursor: pointer; transition: all 0.2s; position: relative;
-            box-shadow: var(--shadow-card);
-        }
-        .info-card:hover { border-color: var(--accent-focus); box-shadow: 0 2px 5px rgba(41, 98, 255, 0.1); }
-        
-        /* 划掉状态：不显示 Eliminated 文字，仅视觉变灰 */
-        .info-card.eliminated { opacity: 0.5; background: var(--bg-subtle); box-shadow: none; border-color: transparent; }
-        .info-card.eliminated .info-icon, .info-card.eliminated .info-name { opacity: 0.5; text-decoration: line-through; }
-        /* 简单的红叉 */
-        .info-card.eliminated::after { 
-            content: "×"; position: absolute; top: 4px; right: 10px;
-            font-size: 1.8rem; color: var(--ink-cross); opacity: 0.8; font-family: 'Patrick Hand', cursive; line-height: 1;
+        .info-body { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start; /* 也就是从上往下排 */
         }
         
-        .info-icon { font-size: 2rem; min-width: 40px; text-align: center; }
-        .info-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .info-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 2px;}
-        .info-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.35; }
+        /* 层级 1：标题 (视觉锚点) */
+        .info-name { 
+            font-family: var(--id-font-family); 
+            font-size: 0.95rem; 
+            font-weight: 800; /* 最粗 */
+            letter-spacing: var(--id-letter-spacing); 
+            color: var(--text-primary); 
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        
+        /* 层级 2：描述 (叙事风味) */
+        .info-desc { 
+            font-family: var(--narrative-font-family); /* 宋体区分 */
+            font-size: 0.85rem; /* 字号适中，不再过小 */
+            font-weight: 400;   /* 常规字重 */
+            color: #555;        /* 加深颜色，防止看不清 */
+            line-height: 1.5;
+            margin-bottom: 6px; /* 与下方属性拉开距离 */
+        }
+
+        /* 层级 3：逻辑属性 (嫌疑人特征 - 红色) */
+        .info-traits { 
+            font-family: var(--font-sans);
+            font-size: 0.75rem; 
+            font-weight: 600;   /* 中等粗度，不要抢标题的戏 */
+            color: var(--ink-cross); /* 红色墨水 */
+            line-height: 1.4;
+            background: rgba(179, 38, 30, 0.05); /* 极淡红底，增加块状感 */
+            padding: 2px 4px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* 层级 3：逻辑属性 (物品标签 - 灰色) */
+        .info-tag {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;   /* 与 traits 保持一致 */
+            color: var(--text-secondary);
+            background: var(--bg-subtle);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            width: fit-content;
+            border: 1px solid var(--border-main);
+            line-height: 1.4;
+        }
 
         /* Matrix */
         .matrix-view { 
@@ -210,8 +439,7 @@
         
         .grid-table { 
             border-collapse: separate; border-spacing: 0; table-layout: fixed; 
-            border: 1px solid var(--text-primary); /* 外框加深，强调主体 */
-            background: #fff; 
+            border: 1px solid var(--text-primary); background: #fff; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .grid-table th, .grid-table td { 
@@ -220,47 +448,173 @@
             overflow: hidden; line-height: var(--cell-size); vertical-align: middle;
         }
         
-        /* Sticky Headers */
         .grid-table thead th { position: sticky; top: 0; background: var(--bg-subtle); z-index: 20; border-bottom: 1px solid var(--text-primary); font-size: 1.4rem; }
         .grid-table tbody th { position: sticky; left: 0; background: var(--bg-subtle); z-index: 10; border-right: 1px solid var(--text-primary); font-size: 1.4rem; }
         
-        /* Highlighting: 唯一的焦点色 */
         .highlight-cross { background-color: var(--highlight-row) !important; }
         .active-header { background-color: var(--text-primary) !important; color: #fff !important; }
-
         .spacer-cell { background-color: var(--bg-app) !important; border:none !important; cursor: default; }
 
-        /* Cell States (墨水色) */
+        /* Cell States */
         .cell { font-family: 'Patrick Hand', cursive; font-size: 2rem; cursor: pointer; transition: background 0.05s; }
         .cell:hover:not(.spacer-cell) { background: #fafafa; }
-        
         .cell[data-state="1"]::after { content: "×"; color: var(--ink-cross); }
         .cell[data-state="2"]::after { content: "✓"; color: var(--ink-check); }
         .cell[data-state="3"]::after { content: "?"; color: var(--ink-pencil); font-size: 1.5rem; display: block; line-height: inherit; }
-        .cell[data-state="4"]::after { content: "x"; color: var(--ink-pencil); font-size: 1.2rem; display: block; line-height: inherit; vertical-align: middle;}
+        .cell[data-state="4"]::after { content: "x"; color: var(--ink-pencil); font-size: 1.2rem; display: block; line-height: inherit; }
 
-        /* Clues */
-        .clue-item { 
-            padding: 10px 14px; margin: 0 16px 8px; border-radius: 4px; 
-            cursor: pointer; font-size: 0.9rem; line-height: 1.5; 
-            background: #fff; border: 1px solid var(--border-main); color: var(--text-primary);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-            font-family: sans-serif; /* 易读 */
+    /* --- Truth Zone (Bottom Panel) --- */
+        #truth-zone {
+            height: 160px; /* 加高以容纳内容 */
+            background: #fff; 
+            border-top: 1px solid var(--border-main);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 10px 20px; 
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08); /* 浮起感阴影 */
+            z-index: 50;
+            position: relative;
         }
-        .clue-item:hover { border-color: var(--accent-focus); background: var(--bg-active); }
-        .clue-item.done { text-decoration: line-through; color: var(--text-disabled); background: transparent; border-color: transparent; box-shadow: none; }
+
+        .truth-label { 
+            font-family: var(--font-sans); /* 修复：改用清晰的无衬线体 */
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            color: var(--text-primary); /* 修复：加深颜色 */
+            margin-bottom: 12px; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+        }
+
+        .slot-container { display: flex; gap: 15px; align-items: center; }
+        
+        .truth-slot {
+            width: 160px; height: 64px; 
+            border: 2px dashed #bdc3c7; /* 深色虚线框 */
+            border-radius: 8px; 
+            background: #f7f9fc; /* 浅灰凹槽背景 */
+            
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            
+            /* 字体修复 */
+            font-family: var(--font-sans);
+            color: var(--text-disabled); 
+            font-size: 0.9rem; 
+            font-weight: 600;
+            
+            transition: all 0.2s; cursor: pointer; position: relative;
+        }
+
+        .truth-slot.drag-over { 
+            border-color: var(--accent-focus); 
+            background: var(--bg-active); 
+            transform: scale(1.02); 
+        }
+
+        .truth-slot.filled { 
+            border-style: solid; 
+            border-color: var(--text-primary); 
+            background: #fff; 
+            color: var(--text-primary); 
+            box-shadow: var(--shadow-card); 
+        }
+        
+        .truth-slot-icon { font-size: 1.8rem; }
+        
+        .truth-slot-text { 
+            font-family: var(--id-font-family); /* 强制使用身份字体 */
+            font-weight: 700; 
+            font-size: 0.95rem; 
+            color: var(--text-primary);
+        }
+        
+        .slot-clear-btn {
+            position: absolute; top: -8px; right: -8px; width: 20px; height: 20px;
+            background: var(--ink-cross); color: #fff; border-radius: 50%; font-size: 12px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .truth-slot:hover .slot-clear-btn { opacity: 1; }
+
+        .submit-btn {
+            background: var(--text-primary); 
+            color: #fff; 
+            border: none; 
+            padding: 0 24px; 
+            height: 64px;
+            border-radius: 8px; 
+            
+            /* 字体修复 */
+            font-family: var(--font-sans);
+            font-weight: 700; 
+            font-size: 1rem; 
+            
+            cursor: pointer; margin-left: 20px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2); 
+            transition: all 0.1s; 
+            display: flex; align-items: center; gap: 8px;
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
+        .submit-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+        .submit-btn:disabled { 
+            background: var(--bg-subtle); 
+            color: var(--text-disabled); 
+            cursor: not-allowed; 
+            box-shadow: none; 
+            transform: none; 
+        }
+
+        /* Clues (统一字体版) */
+.clue-item { 
+    /* 布局与外观 */
+    padding: 10px 14px; 
+    margin: 0 16px 8px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    background: #fff; 
+    border: 1px solid var(--border-main); 
+    border-left: 4px solid var(--text-secondary);
+    color: var(--text-primary); 
+    
+    /* --- 核心修改：字体统一 --- */
+    font-family: var(--font-sans); /* 强制使用与左侧一致的无衬线字体 */
+    font-size: 0.9rem;             /* 字号 */
+    font-weight: 400;              /* 字重 */
+    line-height: 1.6;              /* 行高 */
+    
+    /* 细节优化 */
+    font-feature-settings: "tnum"; /* 等宽数字，方便看数字 */
+    transition: all 0.2s;          /* 增加悬停时的平滑过渡 */
+}
+
+/* 悬停状态 */
+.clue-item:hover { 
+    border-color: var(--accent-focus); 
+    background: var(--bg-active); 
+    transform: translateX(2px); /* 鼠标放上去稍微向右动一下，增加交互感 */
+}
+
+/* 已完成/划掉状态 */
+.clue-item.done { 
+    text-decoration: line-through; 
+    color: var(--text-disabled); 
+    background: transparent; 
+    border-color: transparent; 
+    box-shadow: none; 
+    border-left-color: var(--text-disabled); 
+    opacity: 0.8;
+}
 
         .resizer { width: 8px; cursor: col-resize; flex-shrink: 0; z-index: 50; background: transparent; }
         .resizer:hover { background: rgba(0,0,0,0.05); }
 
         /* Modal */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); z-index: 1000; backdrop-filter: blur(4px); }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 1000; backdrop-filter: blur(4px); }
         .modal { 
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             background: var(--bg-panel); padding: 32px; border-radius: 8px; z-index: 1001; text-align: center; width: 420px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border-main);
         }
-        .modal h2 { font-family: 'Courier New', Courier, monospace; font-size: 1.5rem; margin-top: 0; color: var(--text-primary); }
+        .modal h2 { font-family: var(--font-mono); font-size: 1.5rem; margin-top: 0; color: var(--text-primary); }
         
         .modal-btn-group { display: flex; justify-content: center; gap: 16px; margin-top: 24px; }
         .btn-modal { border: 1px solid var(--border-main); padding: 10px 24px; font-weight: 600; cursor: pointer; font-size: 0.9rem; border-radius: 4px; transition: all 0.2s; }
@@ -269,7 +623,10 @@
         .btn-primary { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
         .btn-primary:hover { background: #000; }
 
-        /* Indicators */
+        /* Shake Animation */
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); } }
+        .shake { animation: shake 0.3s ease-in-out; background: var(--ink-cross) !important; color: #fff !important; border-color: var(--ink-cross) !important; }
+
         #smart-indicator { width: 6px; height: 6px; background: var(--border-main); border-radius: 50%; position: absolute; top: 8px; right: 8px; }
         #smart-indicator.on { background: var(--accent-focus); box-shadow: 0 0 4px var(--accent-focus); }
     </style>
@@ -284,14 +641,14 @@
 
         <div class="header-center">
             <div class="title-group">
-                <h1 class="game-title">妙探寻凶</h1>
+                <h1 class="game-title">妙探寻凶 - 探案集</h1>
                 <div class="how-to-play-icon">?
                     <div class="tooltip-text">
                         <strong>玩法说明：</strong><br>
-                        1. <strong>排除法</strong>：利用线索排除不可能的情况。<br>
+                        1. <strong>排除法</strong>：利用线索在网格中推理。<br>
                         2. <strong>钢笔(✒️)</strong>：记录铁证 (<span style="color:var(--ink-cross)">×</span>排除, <span style="color:var(--ink-check)">✓</span>确认)。<br>
-                        3. <strong>铅笔(✏️)</strong>：记录不确定的假设。<br>
-                        4. <strong>目标</strong>：找出每一行、每一列的唯一关联。
+                        3. <strong>拼凑真相</strong>：将左侧卡片拖入底部插槽。<br>
+                        4. <strong>提交</strong>：只有推理出完整的嫌疑人、凶器和地点，才能结案。
                     </div>
                 </div>
             </div>
@@ -345,30 +702,78 @@
     </div>
 
     <main class="main-container">
+            <!-- LEFT: Cards -->
         <aside class="sidebar" id="dossier-panel">
             <div class="section-label">SUSPECTS</div>
-            <div id="q2-suspects" class="grid-container"></div>
+            <div id="q2-suspects"></div>
             
-            <div class="section-label">LOCATIONS</div>
-            <div id="q3-locations" class="grid-container"></div>
-            
+            <!-- 交换：先把凶器放上来 -->
             <div class="section-label">WEAPONS</div>
-            <div id="q3-weapons" class="grid-container"></div>
+            <div id="q3-weapons"></div>
+            
+            <!-- 交换：地点放最后 -->
+            <div class="section-label">LOCATIONS</div>
+            <div id="q3-locations"></div>
         </aside>
 
         <div class="resizer" id="resizer-left"></div>
 
-        <section class="matrix-view" id="matrix-container">
-            <div id="grid-target"></div>
-        </section>
+        <!-- CENTER: Matrix + Truth Zone -->
+        <div id="center-column">
+            <section class="matrix-view" id="matrix-container">
+                <div id="grid-target"></div>
+            </section>
+            
+            <section id="truth-zone">
+                <div class="truth-label">🕵️ 结案陈词：将真相卡片拖入下方</div>
+                <div class="slot-container">
+                    <div class="truth-slot" id="slot-suspect" data-type="suspect">
+                        <span>👤 拖入凶手</span>
+                    </div>
+                    <div style="font-weight:bold; color:var(--text-disabled)">+</div>
+                    <div class="truth-slot" id="slot-weapon" data-type="weapon">
+                        <span>🔪 拖入凶器</span>
+                    </div>
+                    <div style="font-weight:bold; color:var(--text-disabled)">@</div>
+                    <div class="truth-slot" id="slot-location" data-type="location">
+                        <span>📍 拖入地点</span>
+                    </div>
+                    
+                    <button class="submit-btn" id="btn-submit" onclick="game.submitTruth()" disabled>
+                        <span>📝 提交结案</span>
+                    </button>
+                </div>
+            </section>
+        </div>
 
         <div class="resizer" id="resizer-right"></div>
 
+        <!-- RIGHT: Clues -->
         <aside class="sidebar" id="clue-panel">
             <div class="section-label">CLUES</div>
             <div id="clue-list"></div>
         </aside>
     </main>
+</div>
+
+<!-- GM Panel -->
+<div id="gm-panel">
+    <h3>GM 调试控制台 <span id="gm-close" style="cursor:pointer;" onclick="debugSystem.toggleUI()">X</span></h3>
+    <div class="gm-section">
+        <label>当前关卡答案 (Base64解码):</label>
+        <div class="gm-val" id="gm-solution-text">???</div>
+    </div>
+    <div class="gm-section">
+        <button onclick="debugSystem.toggleXRay()">UI 骨架显形</button>
+        <button onclick="debugSystem.instantWin()">一键通关</button>
+        <button onclick="debugSystem.unlockAll()">解锁全关</button>
+        <button onclick="debugSystem.nukeSave()">删档重置</button>
+    </div>
+    <div class="gm-section">
+        <label>跳转至关卡 (0-N):</label>
+        <input type="number" id="gm-level-input" style="width:50px; background:#000; color:#0f0; border:1px solid #0f0;">
+        <button onclick="debugSystem.jumpLevel()">Go</button>
+    </div>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -384,6 +789,139 @@
 <script>
 const STATE = { EMPTY: 0, PEN_X: 1, PEN_V: 2, PENCIL_Q: 3, PENCIL_X: 4 };
 
+// GM Debug System
+const debugSystem = {
+    buffer: [],
+    secret: 'wangjiaqi',
+    
+    init() {
+        window.addEventListener('keyup', (e) => {
+            this.buffer.push(e.key);
+            if (this.buffer.length > this.secret.length) this.buffer.shift();
+            if (this.buffer.join('') === this.secret) {
+                this.toggleUI();
+                this.buffer = [];
+            }
+        });
+        
+        // Drag logic for GM Panel
+        this.initDrag();
+    },
+    
+    initDrag() {
+        const el = document.getElementById('gm-panel');
+        const header = el.querySelector('h3');
+        let isDown = false;
+        let offset = [0, 0];
+
+        header.addEventListener('mousedown', (e) => {
+            isDown = true;
+            offset = [
+                el.offsetLeft - e.clientX,
+                el.offsetTop - e.clientY
+            ];
+        }, true);
+
+        document.addEventListener('mouseup', () => {
+            isDown = false;
+        }, true);
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDown) {
+                e.preventDefault();
+                el.style.left = (e.clientX + offset[0]) + 'px';
+                el.style.top  = (e.clientY + offset[1]) + 'px';
+            }
+        }, true);
+    },
+
+    toggleUI() {
+        const el = document.getElementById('gm-panel');
+        const isVisible = el.style.display === 'block';
+        el.style.display = isVisible ? 'none' : 'block';
+        if (!isVisible) this.render();
+    },
+
+    render() {
+        const data = GAME_DATA[game.idx];
+        if (data && data.solution) {
+            try {
+                const decoded = atob(data.solution);
+                document.getElementById('gm-solution-text').innerText = decoded;
+            } catch(e) {
+                document.getElementById('gm-solution-text').innerText = "Error decoding";
+            }
+        }
+    },
+
+    toggleXRay() {
+        document.body.classList.toggle('debug-xray');
+    },
+
+    unlockAll() {
+        game.solvedLevels = new Array(GAME_DATA.length).fill(true);
+        game.saveGlobal();
+        game.loadLevel(game.idx);
+        alert("All levels unlocked.");
+    },
+
+    nukeSave() {
+        if(confirm("NUKE ALL DATA?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    },
+    
+    jumpLevel() {
+        const val = parseInt(document.getElementById('gm-level-input').value);
+        if (!isNaN(val)) game.loadLevel(val);
+    },
+
+    instantWin() {
+        const data = GAME_DATA[game.idx];
+        if (!data.fullTruth) {
+            alert("⚠️ 错误：当前关卡 data.js 中缺少 'fullTruth' 配置。");
+            return;
+        }
+
+        // 1. Grid Auto Fill (Logic from Truth)
+        game.gridState = {};
+        const allKeys = [];
+        data.suspects.forEach(s => data.weapons.forEach(w => allKeys.push(`${s.id}-${w.id}`)));
+        data.weapons.forEach(w => data.locations.forEach(l => allKeys.push(`${w.id}-${l.id}`)));
+        data.suspects.forEach(s => data.locations.forEach(l => allKeys.push(`${s.id}-${l.id}`)));
+
+        const trueKeys = new Set();
+        data.fullTruth.forEach(([s, w, l]) => {
+            trueKeys.add(`${s}-${w}`);
+            trueKeys.add(`${w}-${l}`);
+            trueKeys.add(`${s}-${l}`);
+            game.gridState[`${s}-${w}`] = STATE.PEN_V;
+            game.gridState[`${w}-${l}`] = STATE.PEN_V;
+            game.gridState[`${s}-${l}`] = STATE.PEN_V;
+        });
+
+        allKeys.forEach(key => {
+            if (!trueKeys.has(key)) game.gridState[key] = STATE.PEN_X;
+        });
+        
+        game.saveLevelState();
+        game.updateView();
+
+        // 2. Auto Fill Truth Slots & Submit
+        const solParts = atob(data.solution).split('-');
+        game.truthState = {
+            suspect: solParts[0],
+            weapon: solParts[1],
+            location: solParts[2]
+        };
+        game.updateTruthUI();
+        
+        // 3. Trigger Win
+        setTimeout(() => game.submitTruth(), 200);
+    }
+};
+
 const game = {
     idx: 0,
     currentTool: 'pen', 
@@ -397,18 +935,23 @@ const game = {
     snapshot: null,
     cellSize: 46,
     isDragging: false, 
+    truthState: { suspect: null, weapon: null, location: null },
 
     init() {
         this.loadGlobalSave();
         this.loadLevel(this.idx);
         this.initResizers();
         this.initZoom();
+        this.initDragDrop();
         this.updateToolbarUI();
         document.addEventListener('mouseup', () => { this.isDragging = false; });
+        
+        // Init GM
+        debugSystem.init();
     },
 
     loadGlobalSave() {
-        const raw = localStorage.getItem('murdle_final_v2_global');
+        const raw = localStorage.getItem('murdle_final_v5_global');
         if (raw) {
             const d = JSON.parse(raw);
             this.idx = d.currentIdx || 0;
@@ -420,7 +963,7 @@ const game = {
     },
     
     saveGlobal() {
-        localStorage.setItem('murdle_final_v2_global', JSON.stringify({
+        localStorage.setItem('murdle_final_v5_global', JSON.stringify({
             currentIdx: this.idx,
             solvedLevels: this.solvedLevels,
             smartMode: this.smartMode
@@ -428,13 +971,14 @@ const game = {
     },
 
     loadLevelState() {
-        const key = `murdle_final_v2_level_${this.idx}`;
+        const key = `murdle_final_v5_level_${this.idx}`;
         const raw = localStorage.getItem(key);
         if (raw) {
             const d = JSON.parse(raw);
             this.gridState = d.grid || {};
             this.clueState = d.clues || [];
             this.eliminatedCards = d.eliminated || [];
+            this.truthState = d.truth || { suspect: null, weapon: null, location: null };
             this.snapshot = d.snapshot || null;
         } else {
             this.resetLevelData();
@@ -444,11 +988,12 @@ const game = {
     },
 
     saveLevelState() {
-        const key = `murdle_final_v2_level_${this.idx}`;
+        const key = `murdle_final_v5_level_${this.idx}`;
         localStorage.setItem(key, JSON.stringify({
             grid: this.gridState,
             clues: this.clueState,
             eliminated: this.eliminatedCards,
+            truth: this.truthState,
             snapshot: this.snapshot
         }));
     },
@@ -457,6 +1002,7 @@ const game = {
         this.gridState = {};
         this.clueState = [];
         this.eliminatedCards = [];
+        this.truthState = { suspect: null, weapon: null, location: null };
         this.historyStack = [];
         this.redoStack = [];
     },
@@ -468,6 +1014,7 @@ const game = {
             this.updateView();
             this.renderClues(); 
             this.renderCards();
+            this.updateTruthUI();
         }
     },
 
@@ -488,27 +1035,148 @@ const game = {
         this.renderClues();
         this.renderGrid(data);
         this.updateView();
+        this.updateTruthUI();
         this.updateToolbarUI();
     },
 
     renderCards() {
         const data = GAME_DATA[this.idx];
-        document.getElementById('q2-suspects').innerHTML = data.suspects.map(s => this.genCard(s)).join('');
-        document.getElementById('q3-locations').innerHTML = data.locations.map(l => this.genCard(l)).join('');
-        document.getElementById('q3-weapons').innerHTML = data.weapons.map(w => this.genCard(w)).join('');
+        // Note: added 'type' param to genCard for DragDrop
+        document.getElementById('q2-suspects').innerHTML = data.suspects.map(s => this.genCard(s, 'suspect')).join('');
+        document.getElementById('q3-locations').innerHTML = data.locations.map(l => this.genCard(l, 'location')).join('');
+        document.getElementById('q3-weapons').innerHTML = data.weapons.map(w => this.genCard(w, 'weapon')).join('');
     },
 
-    genCard(obj) {
+    genCard(obj, type) {
         const isEliminated = this.eliminatedCards.includes(obj.id);
-        return `<div class="info-card ${isEliminated ? 'eliminated' : ''}" id="card-${obj.id}" 
-            onclick="game.toggleCard('${obj.id}')" oncontextmenu="event.preventDefault(); game.toggleCard('${obj.id}')">
-            <div class="info-icon">${obj.icon}</div>
-            <div class="info-body">
-                <div class="info-name">${obj.name}</div>
-                <div class="info-desc">${obj.desc || ''}</div>
-                ${obj.traits ? `<div style="font-size:0.75rem; color:var(--ink-cross); margin-top:2px; font-weight:600;">${obj.traits}</div>` : ''}
+        
+        // 构建标签 HTML
+        let metaHtml = '';
+    
+        // 1. 嫌疑人特征
+        if (obj.traits) {
+        // 只使用 .meta-tag，去掉 tag-trait 类名，从根源上消除差异
+           metaHtml += `<span class="meta-tag">${obj.traits}</span>`;
+        }
+    
+        // 2. 物品/地点分类
+        if (obj.tag) {
+        // 同样只使用 .meta-tag
+           metaHtml += `<span class="meta-tag">${obj.tag}</span>`;
+        }
+
+        return `
+        <div class="info-card ${isEliminated ? 'eliminated' : ''}" id="card-${obj.id}" 
+            draggable="true" 
+            ondragstart="game.onDragStart(event, '${obj.id}', '${type}', '${obj.icon}', '${obj.name}')"
+            onclick="game.toggleCard('${obj.id}')" 
+            oncontextmenu="event.preventDefault(); game.toggleCard('${obj.id}')">
+            
+            <div class="card-avatar">
+                ${obj.icon}
+            </div>
+            
+            <div class="card-content">
+                <div class="card-title">${obj.name}</div>
+                <div class="card-desc">${obj.desc || ''}</div>
+                <div class="card-meta">
+                    ${metaHtml}
+                </div>
             </div>
         </div>`;
+    },
+
+    // --- Drag & Drop Logic ---
+    onDragStart(e, id, type, icon, name) {
+        e.dataTransfer.setData('text/plain', JSON.stringify({ id, type, icon, name }));
+        e.dataTransfer.effectAllowed = 'copy';
+    },
+
+    initDragDrop() {
+        const slots = document.querySelectorAll('.truth-slot');
+        slots.forEach(slot => {
+            slot.addEventListener('dragover', e => {
+                e.preventDefault();
+                slot.classList.add('drag-over');
+            });
+            slot.addEventListener('dragleave', e => {
+                slot.classList.remove('drag-over');
+            });
+            slot.addEventListener('drop', e => {
+                e.preventDefault();
+                slot.classList.remove('drag-over');
+                const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                
+                if (slot.dataset.type === data.type) {
+                    this.truthState[data.type] = data.id;
+                    this.updateTruthUI();
+                    this.saveLevelState();
+                }
+            });
+        });
+    },
+
+    updateTruthUI() {
+        const data = GAME_DATA[this.idx];
+        const types = ['suspect', 'weapon', 'location'];
+        let filledCount = 0;
+
+        types.forEach(type => {
+            const id = this.truthState[type];
+            const slot = document.getElementById(`slot-${type}`);
+            
+            if (id) {
+                // Find object data
+                let obj;
+                if(type==='suspect') obj = data.suspects.find(x=>x.id===id);
+                else if(type==='weapon') obj = data.weapons.find(x=>x.id===id);
+                else obj = data.locations.find(x=>x.id===id);
+
+                if(obj) {
+                    slot.innerHTML = `
+                        <div class="truth-slot-icon">${obj.icon}</div>
+                        <div class="truth-slot-text">${obj.name}</div>
+                        <div class="slot-clear-btn" onclick="event.stopPropagation(); game.clearSlot('${type}')">✕</div>
+                    `;
+                    slot.classList.add('filled');
+                    filledCount++;
+                }
+            } else {
+                // Empty state
+                const labels = { suspect: '👤 拖入凶手', weapon: '🔪 拖入凶器', location: '📍 拖入地点' };
+                slot.innerHTML = `<span>${labels[type]}</span>`;
+                slot.classList.remove('filled');
+            }
+        });
+
+        document.getElementById('btn-submit').disabled = (filledCount < 3);
+    },
+
+    clearSlot(type) {
+        this.truthState[type] = null;
+        this.updateTruthUI();
+        this.saveLevelState();
+    },
+
+    submitTruth() {
+        const data = GAME_DATA[this.idx];
+        const attempt = `${this.truthState.suspect}-${this.truthState.weapon}-${this.truthState.location}`;
+        
+        if (btoa(attempt) === data.solution) {
+            this.onWin();
+        } else {
+            // Error feedback
+            const btn = document.getElementById('btn-submit');
+            btn.classList.add('shake');
+            btn.style.background = 'var(--ink-cross)';
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span style="color:#fff">❌ 推理错误</span>';
+            setTimeout(() => {
+                btn.classList.remove('shake');
+                btn.style.background = '';
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
     },
 
     renderClues() {
@@ -629,10 +1297,7 @@ const game = {
         const idx = this.eliminatedCards.indexOf(id);
         if (idx > -1) this.eliminatedCards.splice(idx, 1);
         else this.eliminatedCards.push(id);
-        
-        const el = document.getElementById(`card-${id}`);
-        if(el) el.classList.toggle('eliminated');
-        this.saveLevelState();
+        this.renderCards(); this.saveLevelState();
     },
 
     toggleClue(idx) {
@@ -676,7 +1341,6 @@ const game = {
             }
             this.updateView();
             this.saveLevelState();
-            this.checkWin();
         }
     },
 
@@ -692,6 +1356,7 @@ const game = {
         const isWea = (i) => data.weapons.some(x => x.id === i);
         const isLoc = (i) => data.locations.some(x => x.id === i);
 
+        // Robust Smart Fill Logic
         if (isSus(id1) && isWea(id2)) {
             data.weapons.forEach(w => { if(w.id !== id2) cross(`${id1}-${w.id}`); });
             data.suspects.forEach(s => { if(s.id !== id1) cross(`${s.id}-${id2}`); });
@@ -759,29 +1424,6 @@ const game = {
         });
     },
 
-    checkWin() {
-        const data = GAME_DATA[this.idx];
-        const s = this.gridState;
-        
-        for (let su of data.suspects) {
-            for (let we of data.weapons) {
-                for (let lo of data.locations) {
-                    const k1 = `${su.id}-${we.id}`;
-                    const k2 = `${we.id}-${lo.id}`;
-                    const k3 = `${su.id}-${lo.id}`;
-
-                    if (s[k1] === STATE.PEN_V && s[k2] === STATE.PEN_V && s[k3] === STATE.PEN_V) {
-                        const str = `${su.id}-${we.id}-${lo.id}`;
-                        if (btoa(str) === data.solution) {
-                            setTimeout(() => this.onWin(), 100);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    },
-
     onWin() {
         this.solvedLevels[this.idx] = true;
         this.saveGlobal();
@@ -815,23 +1457,30 @@ const game = {
     changeLevel(off) {
         this.loadLevel(this.idx + off);
     },
+    
+    // --- Resizers & Zoom (Fully Restored) ---
     initResizers() {
         const makeResizer = (resizerId, panelId, isLeft) => {
             const resizer = document.getElementById(resizerId);
             const panel = document.getElementById(panelId);
+            if (!resizer || !panel) return;
+
             resizer.addEventListener('mousedown', (e) => {
                 e.preventDefault();
                 const startX = e.clientX;
                 const startW = panel.offsetWidth;
+                
                 const onMove = (mv) => {
                     const dx = mv.clientX - startX;
                     const nw = isLeft ? startW + dx : startW - dx;
-                    if(nw > 150 && nw < 800) panel.style.width = nw + 'px';
+                    if(nw > 200 && nw < 800) panel.style.width = nw + 'px';
                 };
+                
                 const onUp = () => {
                     window.removeEventListener('mousemove', onMove);
                     window.removeEventListener('mouseup', onUp);
                 };
+                
                 window.addEventListener('mousemove', onMove);
                 window.addEventListener('mouseup', onUp);
             });
@@ -839,6 +1488,7 @@ const game = {
         makeResizer('resizer-left', 'dossier-panel', true);
         makeResizer('resizer-right', 'clue-panel', false);
     },
+
     initZoom() {
         const c = document.getElementById('matrix-container');
         c.addEventListener('wheel', (e) => {
